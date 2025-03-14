@@ -66,14 +66,29 @@ class RoomCreateRequest extends FormRequest
             $hotel = Hotel::find($this->hotel_id);
 
             if ($hotel) {
-                // Obtener la cantidad total de habitaciones actuales
                 $currentRooms = Room::where('hotel_id', $this->hotel_id)->sum('qty_rooms');
-                // Obtener la cantidad de habitaciones enviadas en la petición
                 $newRooms = collect($this->input('rooms'))->sum('qty_rooms');
                 $newTotal = $currentRooms + $newRooms;
 
                 if ($newTotal > $hotel->qty_rooms) {
                     $validator->errors()->add('rooms', 'The total number of rooms exceeds the hotel capacity.');
+                }
+
+                // Validar que no haya tipos y acomodaciones repetidas en la petición
+                $roomCombinations = collect($this->input('rooms'))->map(fn ($room) => $room['type'] . '-' . $room['accommodation']);
+
+                if ($roomCombinations->duplicates()->isNotEmpty()) {
+                    $validator->errors()->add('rooms', 'There are duplicate room types and accommodations in the request.');
+                }
+
+                // Validar que no existan combinaciones repetidas en la base de datos
+                foreach ($this->input('rooms') as $room) {
+                    if (Room::where('hotel_id', $this->hotel_id)
+                        ->where('type', $room['type'])
+                        ->where('accommodation', $room['accommodation'])
+                        ->exists()) {
+                        $validator->errors()->add('rooms', "The room type '{$room['type']}' with accommodation '{$room['accommodation']}' already exists in this hotel.");
+                    }
                 }
             }
         });

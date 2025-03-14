@@ -1,66 +1,97 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Instalación de un Proyecto Laravel API Existente desde GitHub
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Esta guía te guiará a través del proceso de instalación de un proyecto Laravel API existente clonado desde GitHub.
 
-## About Laravel
+## Prerrequisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Antes de comenzar, asegúrate de tener instalados los siguientes requisitos:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* **PHP:** Laravel requiere una versión de PHP compatible. Se recomienda PHP 8.1 o superior.
+* **Composer:** Composer es un administrador de dependencias para PHP. Puedes descargarlo desde [getcomposer.org](https://getcomposer.org/).
+* **Git:** Git es necesario para clonar el repositorio desde GitHub.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Pasos de Instalación
 
-## Learning Laravel
+1.  **Clonar el repositorio de GitHub:**
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+    Abre tu terminal y ejecuta el siguiente comando para clonar el repositorio:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+    ```bash
+    https://github.com/GiioBass/dcmrn_back_hotels.git
+    ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    Reemplaza `URL_DEL_REPOSITORIO.git` con la URL del repositorio de GitHub y `nombre-del-proyecto-api` con el nombre que desees para el directorio del proyecto.
 
-## Laravel Sponsors
+2.  **Navegar al directorio del proyecto:**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+    Una vez que se complete la clonación, navega al directorio del proyecto:
 
-### Premium Partners
+    ```bash
+    cd nombre-del-proyecto-api
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+3.  **Instalar dependencias de PHP:**
 
-## Contributing
+    Ejecuta el siguiente comando para instalar las dependencias de PHP definidas en el archivo `composer.json`:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    ```bash
+    composer install
+    ```
 
-## Code of Conduct
+4.  **Configurar las variables de entorno:**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    * Si el repositorio incluye un archivo `.env.example`, cópialo a `.env`:
 
-## Security Vulnerabilities
+        ```bash
+        cp .env.example .env
+        ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    * Si no hay un archivo `.env.example`, consulta la documentación del proyecto o contacta al propietario del repositorio para obtener las variables de entorno necesarias.
+    * Abre el archivo `.env` y configura las siguientes variables:
+        * `APP_NAME`: El nombre de tu aplicación.
+        * `APP_ENV`: El entorno de la aplicación (local, producción, etc.).
+        * `APP_KEY`: Genera una nueva clave de aplicación ejecutando `php artisan key:generate`.
+        * `DB_CONNECTION`: El tipo de conexión de base de datos (mysql, pgsql, sqlite, sqlsrv).
+        * `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`: Los detalles de conexión de tu base de datos.
+        * Otras variables que sean necesarias para el proyecto.
 
-## License
+5.  **Generar la clave de la aplicación:**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    Ejecuta el siguiente comando para generar una nueva clave de aplicación:
+
+    ```bash
+    php artisan key:generate
+    ```
+
+6.  **Ejecutar las migraciones de la base de datos:**
+
+    Ejecuta el siguiente comando para ejecutar las migraciones de la base de datos:
+
+    ```bash
+    php artisan migrate
+    ```
+
+ 
+7.  **Iniciar el servidor de desarrollo:**
+
+    Ejecuta el siguiente comando para iniciar el servidor de desarrollo de Laravel:
+
+    ```bash
+    php artisan serve
+    ```
+
+    La aplicación estará disponible en `http://localhost:8000`.
+
+
+
+## Configuración adicional
+
+* Consulta la documentación del proyecto o los archivos README para obtener instrucciones de configuración específicas.
+* Configura `CORS` para que las peticiones de otros dominios puedan acceder a tu API si el proyecto lo requiere.
+
+## Recursos adicionales
+
+* [Documentación de Laravel](https://laravel.com/docs)
+* El README y la documentación del proyecto en GitHub.
+
+¡Felicidades! Has instalado correctamente el proyecto Laravel API existente desde GitHub. Ahora puedes comenzar a trabajar en él.
