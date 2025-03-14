@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Validation\ValidationException;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+       
     }
 }

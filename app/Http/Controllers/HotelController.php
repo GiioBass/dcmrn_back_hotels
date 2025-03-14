@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\HotelCreateRequest;
+use App\Http\Requests\HotelUpdateRequest;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class HotelController extends Controller
 {
@@ -30,10 +33,10 @@ class HotelController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(HotelCreateRequest $request)
     {
         try {
-            
+
             Hotel::create($request->all());
             return response()->json([
                 'success' => true,
@@ -70,7 +73,7 @@ class HotelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Hotel $hotel)
+    public function update(HotelUpdateRequest $request, Hotel $hotel)
     {
         try {
             $hotel->update($request->all());
