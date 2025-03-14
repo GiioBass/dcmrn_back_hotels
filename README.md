@@ -95,3 +95,117 @@ Antes de comenzar, asegúrate de tener instalados los siguientes requisitos:
 * El README y la documentación del proyecto en GitHub.
 
 ¡Felicidades! Has instalado correctamente el proyecto Laravel API existente desde GitHub. Ahora puedes comenzar a trabajar en él.
+
+
+
+# API Documentation - DCMRN
+
+## Base URL
+`{{url_hotel}}/api/v1/hotels`
+
+---
+
+## Endpoints
+
+### 1. Create a Hotel
+**POST** `{{url_hotel}}/api/v1/hotels`
+
+#### Headers:
+- `Content-Type: application/json`
+
+#### Request Body:
+```json
+{
+    "name": "Hotel Paradise",
+    "address": "123 Calle Principal",
+    "city": "Ciudad Ejemplo",
+    "nit": "1234567891",
+    "qty_rooms": 1
+}
+```
+
+---
+
+### 2. Get All Hotels
+**GET** `{{url_hotel}}/api/v1/hotels`
+
+---
+
+### 3. Get a Single Hotel
+**GET** `{{url_hotel}}/api/v1/hotels/{hotel_id}`
+
+---
+
+### 4. Update a Hotel
+**PUT** `{{url_hotel}}/api/v1/hotels/{hotel_id}`
+
+#### Headers:
+- `Content-Type: application/json`
+
+#### Request Body:
+```json
+{
+    "name": "Hotel Paradise Renovado",
+    "address": "456 Calle Secundaria",
+    "qty_rooms": 75
+}
+```
+
+---
+
+### 5. Delete a Hotel
+**DELETE** `{{url_hotel}}/api/v1/hotels/{hotel_id}`
+
+---
+
+### 6. Add Rooms to a Hotel
+**POST** `{{url_hotel}}/api/v1/hotels/{hotel_id}/rooms`
+
+#### Headers:
+- `Content-Type: application/json`
+
+
+#### Request Body:
+```json
+{
+    "hotel_id": 1,
+    "rooms": [
+        { "type": "suite", "accommodation": "doble", "qty_rooms": 10 },
+        { "type": "junior_suite", "accommodation": "doble", "qty_rooms": 10 },
+        { "type": "standard", "accommodation": "doble", "qty_rooms": 10 }
+    ]
+}
+```
+
+---
+
+### 7. Get All Rooms of a Hotel
+**GET** `{{url_hotel}}/api/v1/hotels/{hotel_id}/rooms`
+
+
+---
+
+### 8. Get a Single Room
+**GET** `{{url_hotel}}/api/v1/hotels/{hotel_id}/rooms/{room_id}`
+
+
+---
+
+### 9. Update a Room
+**PUT** `{{url_hotel}}/api/v1/hotels/{hotel_id}/rooms/{room_id}`
+
+#### Headers:
+- `Content-Type: application/json`
+
+
+#### Request Body:
+```json
+{
+    "hotel_id": 1,
+    "rooms": [
+        { "id": 6, "type": "suite", "accommodation": "doble", "qty_rooms": 10 },
+        { "id": 8, "type": "suite", "accommodation": "doble", "qty_rooms": 10 }
+    ]
+}
+```
+
