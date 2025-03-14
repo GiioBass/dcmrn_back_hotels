@@ -3,13 +3,13 @@
 namespace App\Http\Requests;
 
 use App\Models\Hotel;
+use App\Models\Room;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RoomUpdateRequest extends FormRequest
 {
-
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
@@ -17,7 +17,6 @@ class RoomUpdateRequest extends FormRequest
             'errors' => $validator->errors()
         ], 422));
     }
-
 
     /**
      * Determine if the user is authorized to make this request.
@@ -36,23 +35,31 @@ class RoomUpdateRequest extends FormRequest
     {
         return [
             'hotel_id' => ['required', 'exists:hotels,id'],
-            'qty_rooms' => ['required', 'integer', 'min:1'],
-            'type' => ['required', 'in:standard,junior_suite,suite'],
-            'accommodation' => ['required', function ($attribute, $value, $fail) {
+            'rooms' => ['required', 'array'],
+            'rooms.*.id' => ['required', 'exists:rooms,id'],
+            'rooms.*.qty_rooms' => ['required', 'integer', 'min:1'],
+            'rooms.*.type' => ['required', 'in:standard,junior_suite,suite'],
+            'rooms.*.accommodation' => ['required', function ($attribute, $value, $fail) {
                 $validAccommodations = [
                     'standard' => ['sencilla', 'doble'],
                     'junior_suite' => ['doble', 'triple'],
                     'suite' => ['sencilla', 'doble', 'triple']
                 ];
 
-                $roomType = $this->input('type');
-                if (!isset($validAccommodations[$type]) || !in_array($this->accommodation, $validAccommodations[$roomType])) {
-                    return $this->fail("The accomodation is invalid for this room type.");
+                // Extraer el índice del array (ejemplo: rooms.0.type)
+                preg_match('/rooms\.(\d+)\.accommodation/', $attribute, $matches);
+                $index = $matches[1] ?? null;
+
+                if ($index !== null) {
+                    $roomType = $this->input("rooms.$index.type");
+
+                    if (!isset($validAccommodations[$roomType]) || !in_array($value, $validAccommodations[$roomType])) {
+                        $fail("The accommodation '$value' is invalid for the room type '$roomType'.");
+                    }
                 }
             }],
         ];
     }
-
 
     public function withValidator($validator)
     {
@@ -60,11 +67,18 @@ class RoomUpdateRequest extends FormRequest
             $hotel = Hotel::find($this->hotel_id);
 
             if ($hotel) {
-                $currentRooms = Room::where('hotel_id', $this->hotel_id)->sum('qty_rooms');
-                $newTotal = $currentRooms + $this->qty_rooms;
+                // Obtener la cantidad total de habitaciones actuales excluyendo las que se van a actualizar
+                $currentRooms = Room::where('hotel_id', $this->hotel_id)
+                    ->whereNotIn('id', collect($this->input('rooms'))->pluck('id'))
+                    ->sum('qty_rooms');
+
+                // Obtener la cantidad de habitaciones actualizadas en la petición
+                $updatedRooms = collect($this->input('rooms'))->sum('qty_rooms');
+
+                $newTotal = $currentRooms + $updatedRooms;
 
                 if ($newTotal > $hotel->qty_rooms) {
-                    $validator->errors()->add('qty_rooms', 'The total number of rooms exceeds the hotel capacity.');
+                    $validator->errors()->add('rooms', 'The total number of rooms exceeds the hotel capacity.');
                 }
             }
         });

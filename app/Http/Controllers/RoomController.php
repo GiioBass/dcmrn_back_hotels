@@ -37,7 +37,7 @@ class RoomController extends Controller
             foreach ($request->rooms as $room) {
                 Room::create([
                     'type' => $room['type'],
-                    'accomodation' => $room['accomodation'],
+                    'accommodation' => $room['accommodation'],
                     'qty_rooms' => $room['qty_rooms'],
                     'hotel_id' => $request->hotel_id
                 ]);
@@ -47,6 +47,7 @@ class RoomController extends Controller
                 'message' => 'Room created successfully'
             ]);
         } catch (\Throwable $th) {
+            dd($th);
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred'
@@ -85,7 +86,7 @@ class RoomController extends Controller
                 ->where('hotel_id', $hotel)
                 ->update([
                     'type' => $roomData['type'],
-                    'accomodation' => $roomData['accomodation'],
+                    'accommodation' => $roomData['accommodation'],
                     'qty_rooms' => $roomData['qty_rooms'],
                 ]);
             }
