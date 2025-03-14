@@ -12,10 +12,10 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($hotelId)
     {
         try {
-            $rooms = Room::all();
+            $rooms = Room::where('hotel_id', $hotelId)->get();
             return response()->json([
                 'success' => true,
                 'data' => $rooms
